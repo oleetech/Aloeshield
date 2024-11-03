@@ -1,0 +1,85 @@
+{% load i18n static admin_soft %}
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-white shadow-sm" id="sidenav-main">
+  <div class="sidenav-header">
+    <i class="fas fa-times p-3 cursor-pointer text-muted opacity-7 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand m-0" href="{% url 'admin:index' %}">
+      <img src="{% if request.user.is_authenticated and request.user.company.logo %}{{ request.user.company.logo.url }}{% else %}{% static 'img/logo-ct-dark.png' %}{% endif %}" class="navbar-brand-img h-100" alt="main_logo">
+      <!-- <span class="ms-1 font-weight-bold text-dark">
+        {% if request.user.is_authenticated %}
+            {% if request.user.company %}
+                {{ request.user.company.name }}
+            {% else %}
+                Unmukto
+            {% endif %}
+        {% else %}
+            Unmukto
+        {% endif %}
+      </span> -->
+    </a>
+  </div>
+  <hr class="horizontal light mt-0">
+  <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+      {% if request.user.is_authenticated and not request.user.is_superuser %}
+      <li class="nav-item">
+        <span class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#submenu-dashboard" aria-expanded="true">
+          <span class="d-flex justify-content-between align-items-center">
+            <div class="icon icon-shape icon-sm shadow-sm border-radius-md bg-light text-center me-2 d-flex align-items-center justify-content-center">
+              <span class="sidebar-icon fas fa-blog text-muted" aria-hidden="true"></span>
+            </div>
+            <a href="">
+              <span class="nav-link-text ms-1 text-dark">Dashboard</span>
+            </a>
+          </span>
+        </span>
+        <div class="multi-level ms-5 collapse show" role="list" id="submenu-dashboard" aria-expanded="false">
+          <ul class="flex-column nav">
+            <li class="nav-item list-unstyled">
+              <a class="nav-link" href="{% url 'update_profile' %}">
+                <span class="nav-link-text ms-1 text-muted">Update Profile</span>
+              </a>
+            </li>
+            <li class="nav-item list-unstyled">
+              <a class="nav-link" href="{% url 'give_attendance_view' %}">
+                <span class="nav-link-text ms-1 text-muted">Give Attendance</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      {% endif %}
+      {% admin_get_menu as app_list %}
+      {% if app_list %}
+        {% for app in app_list %}
+          {% if app.has_perms and not app.pinned %}
+          <li class="nav-item">
+            <span class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" data-bs-target="#submenu-{{ app.app_label }}">
+              <span class="d-flex justify-content-between align-items-center">
+                <div class="icon icon-shape icon-sm shadow-sm border-radius-md bg-light text-center me-2 d-flex align-items-center justify-content-center">
+                  <span class="sidebar-icon {{ app.icon }} text-muted"></span>
+                </div>
+                <a href="{{ app.url }}">
+                  <span class="nav-link-text ms-1 text-dark">{{ app.label|slice:10 }}{% if app.label|length > 10 %}..{% endif %}</span>
+                </a>
+              </span>
+            </span>
+            {% if app.models %}
+            <div class="multi-level ms-5 collapse" role="list" id="submenu-{{ app.app_label }}">
+              <ul class="flex-column nav">
+                {% for model in app.models %}
+                  <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="{{ model.url }}">
+                      <span class="nav-link-text ms-1 text-muted">{{ model.label }}</span>
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          </li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+</aside>

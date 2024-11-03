@@ -1,0 +1,83 @@
+
+{% extends "layouts/base.html" %}
+
+{% load i18n admin_urls static admin_modify %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+    {{ media }}
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/forms.css" %}">
+{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <!-- Breadcrumb navigation -->
+    {% endblock %}
+{% endif %}
+
+{% block content %}
+
+    <div class="py-4 mt-5 mx-5">
+        <div class="d-flex justify-content-between w-100 flex-wrap">
+
+            <div class="mb-3 mb-lg-0">
+                <h1 class="h4">
+                    {% if add %}
+                        {% blocktrans with name=opts.verbose_name %}Add {{ name }}{% endblocktrans %}
+                    {% else %}
+                        {{ original|truncatewords:"18" }}
+                    {% endif %}
+                </h1>
+            </div>
+            <div>
+                {% block object-tools %}
+                    {% if change %}{% if not is_popup %}
+                        {% block object-tools-items %}
+                            {% change_form_object_tools %}
+                        {% endblock %}
+                    {% endif %}{% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    
+
+    <div class="container-fluid">
+        <div class="row">
+            <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" class="d-flex flex-row align-items-center flex-wrap"
+                  method="post" id="{{ opts.model_name }}_form" novalidate class="row">
+                {% csrf_token %}
+
+                <!-- Render the fieldsets -->
+                {% for fieldset in adminform %}
+                    <div class="col-md-12">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                {% include "admin/includes/fieldset.html" with fieldset=fieldset %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <!-- Inline fieldsets -->
+                {% block inline_field_sets %}
+                    {% for inline_admin_formset in inline_admin_formsets %}
+                        {% include inline_admin_formset.opts.template %}
+                    {% endfor %}
+                {% endblock %}
+
+                <div class="col-12">
+                    <div class="d-flex justify-content-end">
+                        {% submit_row %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

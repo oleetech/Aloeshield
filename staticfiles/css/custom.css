@@ -1,0 +1,43 @@
+.title {
+    color: #007bff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+
+/* Custom styles for light theme */
+.nav-item:hover {
+    background-color: #f0f0f0; /* Light background color on hover */
+}
+
+.nav-item a {
+    color: #333; /* Default text color */
+}
+
+/* Change text color on hover */
+.nav-item:hover a {
+    color: #007bff; /* Change text color on hover */
+}
+
+/* Optional: Style the active link differently */
+.nav-item.active {
+    background-color: #e0e0e0; /* Slightly darker background for active link */
+}
+
+.nav-item.active a {
+    color: #0056b3; /* Darker text color for active link */
+}
+
+
+.navbar-vertical .navbar-nav .nav-item .collapse .nav .nav-item .nav-link, .navbar-vertical .navbar-nav .nav-item .collapsing .nav .nav-item .nav-link {
+    position: inherit !important;
+}
+
+.nav-link:hover{
+    color: #007bff; /* Change text color on hover */
+
+}
